@@ -1,5 +1,76 @@
 [
   {
+    "Media_ID": "815d353726ebc298",
+    "Title": "VARDAAT",
+    "File_Name": "Vardaat [1440p] [VP9] [Multi Audio] [GCP].mkv",
+    "Artist": "Virat, LXY Music, Indra Dhavsi",
+    "Album": "VARDAAT - Single",
+    "Composer": "LXY Music",
+    "Resolution": "2560x1440",
+    "Video_Codec": "vp9",
+    "Video_Quality": "2K",
+    "Audio_Count": 2,
+    "Hi_Res_Audio": 1,
+    "Subtitle_Count": 0,
+    "Cover": "covers/815d353726ebc298.svg",
+    "Cover_Source": "Generated",
+    "Drive_URL": "https://drive.google.com/file/d/1YpmnmJqf2nh4mHvbxhsjPc9hoZIa3ghx/view",
+    "Download_URL": "https://drive.google.com/uc?export=download&id=1YpmnmJqf2nh4mHvbxhsjPc9hoZIa3ghx",
+    "Video": [
+      {
+        "Video_ID": "815d353726ebc298-V1",
+        "Media_ID": "815d353726ebc298",
+        "File_Name": "Vardaat [1440p] [VP9] [Multi Audio] [GCP].mkv",
+        "Codec": "vp9",
+        "Profile": "Profile 0",
+        "Width": 2560,
+        "Height": 1440,
+        "Resolution": "2560x1440",
+        "Aspect_Ratio": "16:9",
+        "FPS": 24.0,
+        "Bitrate": "",
+        "Bit_Depth": "",
+        "Pixel_Format": "yuv420p",
+        "HDR": "",
+        "Scan_Type": "Progressive",
+        "Default": "Yes"
+      }
+    ],
+    "Audio": [
+      {
+        "Audio_ID": "815d353726ebc298-A1",
+        "Media_ID": "815d353726ebc298",
+        "Track_No": 1,
+        "Title": "",
+        "Artist": "",
+        "Codec": "opus",
+        "Sample_Rate": "48000",
+        "Bit_Depth": "",
+        "Channels": 2,
+        "Channel_Layout": "stereo",
+        "Language": "eng",
+        "Hi_Res": "No",
+        "Default": "No"
+      },
+      {
+        "Audio_ID": "815d353726ebc298-A2",
+        "Media_ID": "815d353726ebc298",
+        "Track_No": 2,
+        "Title": "Hi-Res Apple Lossless (ALAC) 24-bit 48.0kHz By GCP",
+        "Artist": "",
+        "Codec": "alac",
+        "Sample_Rate": "48000",
+        "Bit_Depth": "24",
+        "Channels": 2,
+        "Channel_Layout": "stereo",
+        "Language": "",
+        "Hi_Res": "Yes",
+        "Default": "Yes"
+      }
+    ],
+    "Subtitle": []
+  },
+  {
     "Media_ID": "310bbe19b1cbb713",
     "Title": "Patar Bashori",
     "File_Name": "Patar Bashori.mkv",
