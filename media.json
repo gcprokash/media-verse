@@ -1,5 +1,219 @@
 [
   {
+    "Media_ID": "d727690057b65051",
+    "Title": "Ghammar Ghaghro",
+    "File_Name": "Ghammar Ghaghro [1080p] [VP9] [Multi Audio] [14 Subtitle Tracks] [GCP].mkv",
+    "Artist": "Jyotica Tangri, Dj Kwid, Manubhai Rabari",
+    "Album": "Ghammar Ghaghro (From \"Pidha Pachhi\") - Single",
+    "Composer": "Dj Kwid & Manubhai Rabari",
+    "Genre": "Regional Indian",
+    "Language": "Gujarati",
+    "Resolution": "2048x1080",
+    "Video_Codec": "vp9",
+    "Video_Quality": "1080p",
+    "Audio_Count": 2,
+    "Hi_Res_Audio": 1,
+    "Subtitle_Count": 14,
+    "Cover": "covers/d727690057b65051.svg",
+    "Cover_Source": "Generated",
+    "Drive_URL": "https://drive.google.com/file/d/1m4mpxc3Z7IglAI160Q6CaX5qVApeYbux/view",
+    "Download_URL": "https://drive.google.com/uc?export=download&id=1m4mpxc3Z7IglAI160Q6CaX5qVApeYbux",
+    "Video": [
+      {
+        "Video_ID": "d727690057b65051-V1",
+        "Media_ID": "d727690057b65051",
+        "File_Name": "Ghammar Ghaghro [1080p] [VP9] [Multi Audio] [14 Subtitle Tracks] [GCP].mkv",
+        "Codec": "vp9",
+        "Profile": "Profile 0",
+        "Width": 2048,
+        "Height": 1080,
+        "Resolution": "2048x1080",
+        "Aspect_Ratio": "256:135",
+        "FPS": 24.0,
+        "Bitrate": "",
+        "Bit_Depth": "",
+        "Pixel_Format": "yuv420p",
+        "HDR": "",
+        "Scan_Type": "Progressive",
+        "Default": "Yes"
+      }
+    ],
+    "Audio": [
+      {
+        "Audio_ID": "d727690057b65051-A1",
+        "Media_ID": "d727690057b65051",
+        "Track_No": 1,
+        "Title": "",
+        "Artist": "",
+        "Codec": "opus",
+        "Sample_Rate": "48000",
+        "Bit_Depth": "",
+        "Channels": 2,
+        "Channel_Layout": "stereo",
+        "Language": "eng",
+        "Hi_Res": "No",
+        "Default": "No"
+      },
+      {
+        "Audio_ID": "d727690057b65051-A2",
+        "Media_ID": "d727690057b65051",
+        "Track_No": 2,
+        "Title": "Hi-Res Apple Lossless (ALAC) 16-bit 44.1kHz By GCP",
+        "Artist": "",
+        "Codec": "alac",
+        "Sample_Rate": "44100",
+        "Bit_Depth": "16",
+        "Channels": 2,
+        "Channel_Layout": "stereo",
+        "Language": "",
+        "Hi_Res": "Yes",
+        "Default": "Yes"
+      }
+    ],
+    "Subtitle": [
+      {
+        "Subtitle_ID": "d727690057b65051-S1",
+        "Media_ID": "d727690057b65051",
+        "Track_No": 1,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Ghammar Ghaghro [Bangla + English] [GCP]",
+        "Default": "Yes",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "d727690057b65051-S2",
+        "Media_ID": "d727690057b65051",
+        "Track_No": 2,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Ghammar Ghaghro [Bangla] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "d727690057b65051-S3",
+        "Media_ID": "d727690057b65051",
+        "Track_No": 3,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Ghammar Ghaghro [English] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "d727690057b65051-S4",
+        "Media_ID": "d727690057b65051",
+        "Track_No": 4,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Ghammar Ghaghro [Original + Bangla + English] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "d727690057b65051-S5",
+        "Media_ID": "d727690057b65051",
+        "Track_No": 5,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Ghammar Ghaghro [Original + Bangla] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "d727690057b65051-S6",
+        "Media_ID": "d727690057b65051",
+        "Track_No": 6,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Ghammar Ghaghro [Original + English] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "d727690057b65051-S7",
+        "Media_ID": "d727690057b65051",
+        "Track_No": 7,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Ghammar Ghaghro [Original + Romanized + Bangla] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "d727690057b65051-S8",
+        "Media_ID": "d727690057b65051",
+        "Track_No": 8,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Ghammar Ghaghro [Original + Romanized + English] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "d727690057b65051-S9",
+        "Media_ID": "d727690057b65051",
+        "Track_No": 9,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Ghammar Ghaghro [Original + Romanized] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "d727690057b65051-S10",
+        "Media_ID": "d727690057b65051",
+        "Track_No": 10,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Ghammar Ghaghro [Original] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "d727690057b65051-S11",
+        "Media_ID": "d727690057b65051",
+        "Track_No": 11,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Ghammar Ghaghro [Romanized + Bangla + English] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "d727690057b65051-S12",
+        "Media_ID": "d727690057b65051",
+        "Track_No": 12,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Ghammar Ghaghro [Romanized + English] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "d727690057b65051-S13",
+        "Media_ID": "d727690057b65051",
+        "Track_No": 13,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Ghammar Ghaghro [Romanized] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "d727690057b65051-S14",
+        "Media_ID": "d727690057b65051",
+        "Track_No": 14,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Ghammar_Ghaghro_Original_+_Romanized_+_Bangla_+_English_GCP",
+        "Default": "No",
+        "Forced": "No"
+      }
+    ]
+  },
+  {
     "Media_ID": "815d353726ebc298",
     "Title": "VARDAAT",
     "File_Name": "Vardaat [1440p] [VP9] [Multi Audio] [GCP].mkv",
