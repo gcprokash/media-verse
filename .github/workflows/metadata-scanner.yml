@@ -134,6 +134,8 @@ jobs:
                   "Artist",
                   "Album",
                   "Composer",
+                  "Genre",
+                  "Language",
                   "Resolution",
                   "Video_Codec",
                   "Video_Quality",
@@ -962,6 +964,20 @@ jobs:
 
 
           # =====================================================
+          # MANUAL LANGUAGE MAP
+          #
+          # If the source file does not contain a Language tag,
+          # add the original language here using the Title.
+          # Example:
+          # "VARDAAT": "Haryanvi",
+          # =====================================================
+
+          LANGUAGE_MAP = {
+              "VARDAAT": "Haryanvi",
+          }
+
+
+          # =====================================================
           # GENERAL METADATA
           # =====================================================
 
@@ -1033,11 +1049,42 @@ jobs:
                   composer
               )
 
+              # -------------------------------------------------
+              # GENRE
+              # -------------------------------------------------
+
+              genre = safe_string(
+                  tags.get("genre")
+                  or tags.get("GENRE")
+                  or tags.get("Genre")
+              )
+
+              # -------------------------------------------------
+              # LANGUAGE
+              #
+              # Prefer real metadata from the source file.
+              # If it is missing, use the manual map above.
+              # -------------------------------------------------
+
+              language = safe_string(
+                  tags.get("language")
+                  or tags.get("LANGUAGE")
+                  or tags.get("Language")
+              )
+
+              if not language:
+                  language = LANGUAGE_MAP.get(
+                      title.upper(),
+                      ""
+                  )
+
               return {
                   "title": title,
                   "artist": artist,
                   "album": album,
-                  "composer": composer
+                  "composer": composer,
+                  "genre": genre,
+                  "language": language
               }
 
 
@@ -1966,6 +2013,10 @@ jobs:
 
               composer = metadata["composer"]
 
+              genre = metadata["genre"]
+
+              language = metadata["language"]
+
 
               print(
                   "Title: "
@@ -1995,6 +2046,24 @@ jobs:
                   + (
                       composer
                       if composer
+                      else "[Not found]"
+                  )
+              )
+
+              print(
+                  "Genre: "
+                  + (
+                      genre
+                      if genre
+                      else "[Not found]"
+                  )
+              )
+
+              print(
+                  "Language: "
+                  + (
+                      language
+                      if language
                       else "[Not found]"
                   )
               )
@@ -2264,6 +2333,10 @@ jobs:
 
                   composer,
 
+                  genre,
+
+                  language,
+
                   resolution,
 
                   codec,
@@ -2347,6 +2420,12 @@ jobs:
 
                   "Composer":
                       composer,
+
+                  "Genre":
+                      genre,
+
+                  "Language":
+                      language,
 
                   "Resolution":
                       resolution,
