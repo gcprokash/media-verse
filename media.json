@@ -1,5 +1,109 @@
 [
   {
+    "Media_ID": "3d79ee7654f700ef",
+    "Title": "Rupa Goriya",
+    "File_Name": "Rupa Goriya.mkv",
+    "Artist": "Vinay Kumar, Anita Bara",
+    "Album": "Rupa Goriya - Single",
+    "Composer": "Sanjay Nayak",
+    "Genre": "Indian Pop",
+    "Language": "Nagpuri",
+    "Resolution": "2560x1440",
+    "Video_Codec": "vp9",
+    "Video_Quality": "2K",
+    "Audio_Count": 2,
+    "Hi_Res_Audio": 1,
+    "Subtitle_Count": 3,
+    "Cover": "covers/3d79ee7654f700ef.svg",
+    "Cover_Source": "Generated",
+    "Drive_URL": "https://drive.google.com/file/d/1Giu4vaVJG9CNuaB7gjg-7XZF_XVEinDf/view",
+    "Download_URL": "https://drive.google.com/uc?export=download&id=1Giu4vaVJG9CNuaB7gjg-7XZF_XVEinDf",
+    "Video": [
+      {
+        "Video_ID": "3d79ee7654f700ef-V1",
+        "Media_ID": "3d79ee7654f700ef",
+        "File_Name": "Rupa Goriya.mkv",
+        "Codec": "vp9",
+        "Profile": "Profile 0",
+        "Width": 2560,
+        "Height": 1440,
+        "Resolution": "2560x1440",
+        "Aspect_Ratio": "16:9",
+        "FPS": 25.0,
+        "Bitrate": "",
+        "Bit_Depth": "",
+        "Pixel_Format": "yuv420p",
+        "HDR": "",
+        "Scan_Type": "Progressive",
+        "Default": "Yes"
+      }
+    ],
+    "Audio": [
+      {
+        "Audio_ID": "3d79ee7654f700ef-A1",
+        "Media_ID": "3d79ee7654f700ef",
+        "Track_No": 1,
+        "Title": "Original YouTube Opus",
+        "Artist": "",
+        "Codec": "opus",
+        "Sample_Rate": "48000",
+        "Bit_Depth": "",
+        "Channels": 2,
+        "Channel_Layout": "stereo",
+        "Language": "",
+        "Hi_Res": "No",
+        "Default": "No"
+      },
+      {
+        "Audio_ID": "3d79ee7654f700ef-A2",
+        "Media_ID": "3d79ee7654f700ef",
+        "Track_No": 2,
+        "Title": "Hi-Res Apple Lossless (ALAC) 24-bit 44.1kHz By GCP",
+        "Artist": "",
+        "Codec": "alac",
+        "Sample_Rate": "44100",
+        "Bit_Depth": "24",
+        "Channels": 2,
+        "Channel_Layout": "stereo",
+        "Language": "",
+        "Hi_Res": "Yes",
+        "Default": "Yes"
+      }
+    ],
+    "Subtitle": [
+      {
+        "Subtitle_ID": "3d79ee7654f700ef-S1",
+        "Media_ID": "3d79ee7654f700ef",
+        "Track_No": 1,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Rupa Goriya Dual [English] [GCP]",
+        "Default": "Yes",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "3d79ee7654f700ef-S2",
+        "Media_ID": "3d79ee7654f700ef",
+        "Track_No": 2,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Rupa Goriya Dual [Native + English] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "3d79ee7654f700ef-S3",
+        "Media_ID": "3d79ee7654f700ef",
+        "Track_No": 3,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Rupa Goriya Dual [Native] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      }
+    ]
+  },
+  {
     "Media_ID": "d727690057b65051",
     "Title": "Ghammar Ghaghro",
     "File_Name": "Ghammar Ghaghro [1080p] [VP9] [Multi Audio] [14 Subtitle Tracks] [GCP].mkv",
