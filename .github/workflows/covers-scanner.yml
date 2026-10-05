@@ -1,0 +1,696 @@
+name: Covers Scanner
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron: "*/10 * * * *"
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # =========================================================
+      # CHECKOUT
+      # =========================================================
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+
+      # =========================================================
+      # INSTALL PYTHON PACKAGES
+      # =========================================================
+
+      - name: Install Python Packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install google-api-python-client google-auth google-auth-httplib2
+
+
+      # =========================================================
+      # CREATE COVER SCANNER
+      # =========================================================
+
+      - name: Create Cover Scanner
+        run: |
+          cat > covers_scanner.py <<'PYTHON'
+
+          import os
+          import re
+          import json
+          from pathlib import Path
+
+          from google.oauth2 import service_account
+          from googleapiclient.discovery import build
+
+
+          # =====================================================
+          # CONFIGURATION
+          # =====================================================
+
+          COVER_FOLDER_ID = "1N9Z-C6tza7GWGy6NPYT4yWVF0zOuCvZR"
+
+          SPREADSHEET_ID = "1hPw7hJFHmUuLjaRVK6VBU8n98W1ebuTWLuNSMOCTDcQ"
+
+          SHEET_NAME = "Covers"
+
+          COVER_EXTENSIONS = {
+              ".jpg",
+              ".jpeg",
+              ".png",
+              ".webp"
+          }
+
+
+          # =====================================================
+          # SERVICE ACCOUNT
+          # =====================================================
+
+          SERVICE_ACCOUNT_JSON = os.environ.get(
+              "GOOGLE_SERVICE_ACCOUNT_JSON"
+          )
+
+          if not SERVICE_ACCOUNT_JSON:
+              raise RuntimeError(
+                  "GOOGLE_SERVICE_ACCOUNT_JSON secret পাওয়া যায়নি।"
+              )
+
+
+          # =====================================================
+          # GOOGLE AUTHENTICATION
+          # =====================================================
+
+          SCOPES = [
+              "https://www.googleapis.com/auth/drive.readonly",
+              "https://www.googleapis.com/auth/spreadsheets"
+          ]
+
+          credentials = (
+              service_account
+              .Credentials
+              .from_service_account_info(
+                  json.loads(
+                      SERVICE_ACCOUNT_JSON
+                  ),
+                  scopes=SCOPES
+              )
+          )
+
+          drive_service = build(
+              "drive",
+              "v3",
+              credentials=credentials
+          )
+
+          sheets_service = build(
+              "sheets",
+              "v4",
+              credentials=credentials
+          )
+
+
+          # =====================================================
+          # STRING HELPERS
+          # =====================================================
+
+          def safe_string(value):
+
+              if value is None:
+                  return ""
+
+              return str(value).strip()
+
+
+          def get_title(filename):
+
+              filename = safe_string(
+                  filename
+              )
+
+              suffix = Path(
+                  filename
+              ).suffix
+
+              if suffix:
+
+                  return filename[
+                      :-len(suffix)
+                  ].strip()
+
+              return filename
+
+
+          def normalize_title(value):
+
+              value = safe_string(
+                  value
+              ).casefold()
+
+              value = re.sub(
+                  r"\s+",
+                  " ",
+                  value
+              )
+
+              return value.strip()
+
+
+          # =====================================================
+          # DRIVE URLS
+          # =====================================================
+
+          def drive_view_url(file_id):
+
+              return (
+                  "https://drive.google.com/file/d/"
+                  + file_id
+                  + "/view"
+              )
+
+
+          def drive_download_url(file_id):
+
+              return (
+                  "https://drive.google.com/uc?"
+                  "export=download&id="
+                  + file_id
+              )
+
+
+          # =====================================================
+          # LIST COVER FILES
+          # =====================================================
+
+          def list_cover_files():
+
+              cover_files = []
+
+              page_token = None
+
+              while True:
+
+                  request_args = {
+                      "q": (
+                          f"'{COVER_FOLDER_ID}' "
+                          "in parents "
+                          "and trashed = false"
+                      ),
+                      "fields": (
+                          "nextPageToken,"
+                          "files("
+                          "id,"
+                          "name,"
+                          "mimeType,"
+                          "modifiedTime"
+                          ")"
+                      ),
+                      "pageSize": 1000
+                  }
+
+                  if page_token:
+
+                      request_args[
+                          "pageToken"
+                      ] = page_token
+
+                  response = (
+                      drive_service
+                      .files()
+                      .list(
+                          **request_args
+                      )
+                      .execute()
+                  )
+
+                  files = response.get(
+                      "files",
+                      []
+                  )
+
+                  for file in files:
+
+                      filename = safe_string(
+                          file.get(
+                              "name"
+                          )
+                      )
+
+                      extension = (
+                          Path(filename)
+                          .suffix
+                          .lower()
+                      )
+
+                      if extension in COVER_EXTENSIONS:
+
+                          cover_files.append(
+                              file
+                          )
+
+                  page_token = response.get(
+                      "nextPageToken"
+                  )
+
+                  if not page_token:
+
+                      break
+
+              return cover_files
+
+
+          # =====================================================
+          # ENSURE SHEET EXISTS
+          # =====================================================
+
+          def ensure_sheet():
+
+              spreadsheet = (
+                  sheets_service
+                  .spreadsheets()
+                  .get(
+                      spreadsheetId=
+                          SPREADSHEET_ID
+                  )
+                  .execute()
+              )
+
+              existing_sheets = {
+
+                  sheet[
+                      "properties"
+                  ][
+                      "title"
+                  ]
+
+                  for sheet in spreadsheet.get(
+                      "sheets",
+                      []
+                  )
+              }
+
+              if SHEET_NAME in existing_sheets:
+
+                  return
+
+              print(
+                  "Creating sheet: "
+                  + SHEET_NAME
+              )
+
+              body = {
+
+                  "requests": [
+
+                      {
+
+                          "addSheet": {
+
+                              "properties": {
+
+                                  "title":
+                                      SHEET_NAME
+
+                              }
+
+                          }
+
+                      }
+
+                  ]
+
+              }
+
+              (
+                  sheets_service
+                  .spreadsheets()
+                  .batchUpdate(
+                      spreadsheetId=
+                          SPREADSHEET_ID,
+                      body=body
+                  )
+                  .execute()
+              )
+
+
+          # =====================================================
+          # WRITE COVER SHEET
+          # =====================================================
+
+          def write_sheet(rows):
+
+              ensure_sheet()
+
+              headers = [
+
+                  "Title",
+                  "File_Name",
+                  "Drive_URL",
+                  "Download_URL"
+
+              ]
+
+              values = [
+
+                  headers
+
+              ]
+
+              values.extend(
+                  rows
+              )
+
+
+              # -------------------------------------------------
+              # CLEAR ONLY COVERS TAB
+              # -------------------------------------------------
+
+              (
+                  sheets_service
+                  .spreadsheets()
+                  .values()
+                  .clear(
+                      spreadsheetId=
+                          SPREADSHEET_ID,
+                      range=
+                          f"{SHEET_NAME}!A:ZZ",
+                      body={}
+                  )
+                  .execute()
+              )
+
+
+              # -------------------------------------------------
+              # WRITE DATA
+              # -------------------------------------------------
+
+              (
+                  sheets_service
+                  .spreadsheets()
+                  .values()
+                  .update(
+                      spreadsheetId=
+                          SPREADSHEET_ID,
+                      range=
+                          f"{SHEET_NAME}!A1",
+                      valueInputOption=
+                          "RAW",
+                      body={
+                          "values":
+                              values
+                      }
+                  )
+                  .execute()
+              )
+
+
+          # =====================================================
+          # MAIN
+          # =====================================================
+
+          def main():
+
+              print()
+
+              print(
+                  "======================================"
+              )
+
+              print(
+                  "COVERS SCANNER"
+              )
+
+              print(
+                  "======================================"
+              )
+
+              print()
+
+              print(
+                  "Cover Folder ID:"
+              )
+
+              print(
+                  COVER_FOLDER_ID
+              )
+
+              print()
+
+              print(
+                  "Spreadsheet ID:"
+              )
+
+              print(
+                  SPREADSHEET_ID
+              )
+
+              print()
+
+              print(
+                  "Sheet:"
+              )
+
+              print(
+                  SHEET_NAME
+              )
+
+              print()
+
+              print(
+                  "Scanning Google Drive..."
+              )
+
+
+              # -------------------------------------------------
+              # GET COVER FILES
+              # -------------------------------------------------
+
+              cover_files = (
+                  list_cover_files()
+              )
+
+              print()
+
+              print(
+                  "Cover files found: "
+                  + str(
+                      len(
+                          cover_files
+                      )
+                  )
+              )
+
+
+              # -------------------------------------------------
+              # BUILD ROWS
+              # -------------------------------------------------
+
+              rows = []
+
+              used_titles = set()
+
+
+              for file in cover_files:
+
+                  file_id = safe_string(
+                      file.get(
+                          "id"
+                      )
+                  )
+
+                  filename = safe_string(
+                      file.get(
+                          "name"
+                      )
+                  )
+
+
+                  if not file_id:
+
+                      continue
+
+
+                  if not filename:
+
+                      continue
+
+
+                  title = get_title(
+                      filename
+                  )
+
+
+                  if not title:
+
+                      continue
+
+
+                  normalized_title = (
+                      normalize_title(
+                          title
+                      )
+                  )
+
+
+                  # -------------------------------------------------
+                  # DUPLICATE TITLE
+                  # -------------------------------------------------
+
+                  if normalized_title in used_titles:
+
+                      print(
+                          "Duplicate cover skipped: "
+                          + title
+                      )
+
+                      continue
+
+
+                  used_titles.add(
+                      normalized_title
+                  )
+
+
+                  # -------------------------------------------------
+                  # URLs
+                  # -------------------------------------------------
+
+                  view_url = (
+                      drive_view_url(
+                          file_id
+                      )
+                  )
+
+                  download_url = (
+                      drive_download_url(
+                          file_id
+                      )
+                  )
+
+
+                  # -------------------------------------------------
+                  # ROW
+                  # -------------------------------------------------
+
+                  row = [
+
+                      title,
+                      filename,
+                      view_url,
+                      download_url
+
+                  ]
+
+
+                  rows.append(
+                      row
+                  )
+
+
+                  print(
+                      "Found cover: "
+                      + title
+                  )
+
+
+              # -------------------------------------------------
+              # SORT BY TITLE
+              # -------------------------------------------------
+
+              rows.sort(
+
+                  key=lambda row:
+                      normalize_title(
+                          row[0]
+                      )
+
+              )
+
+
+              # -------------------------------------------------
+              # WRITE SHEET
+              # -------------------------------------------------
+
+              print()
+
+              print(
+                  "Writing Covers sheet..."
+              )
+
+              write_sheet(
+                  rows
+              )
+
+
+              # -------------------------------------------------
+              # FINAL REPORT
+              # -------------------------------------------------
+
+              print()
+
+              print(
+                  "======================================"
+              )
+
+              print(
+                  "SCAN COMPLETED SUCCESSFULLY"
+              )
+
+              print(
+                  "======================================"
+              )
+
+              print(
+                  "Covers written: "
+                  + str(
+                      len(
+                          rows
+                      )
+                  )
+              )
+
+              print(
+                  "Sheet: "
+                  + SHEET_NAME
+              )
+
+              print(
+                  "======================================"
+              )
+
+
+          # =====================================================
+          # RUN
+          # =====================================================
+
+          if __name__ == "__main__":
+
+              main()
+
+          PYTHON
+
+
+      # =========================================================
+      # CHECK PYTHON SYNTAX
+      # =========================================================
+
+      - name: Check Python Syntax
+        run: |
+          python -m py_compile covers_scanner.py
+
+
+      # =========================================================
+      # RUN COVER SCANNER
+      # =========================================================
+
+      - name: Run Cover Scanner
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+
+        run: |
+          python covers_scanner.py
