@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "*/5 * * * *"
 
 jobs:
 
@@ -57,13 +57,9 @@ jobs:
           # CONFIGURATION
           # =====================================================
 
-          AUDIO_FOLDER_ID = (
-              "16gtAwWywOlJrSwQ0HZOJcDegcVXfiX2K"
-          )
+          AUDIO_FOLDER_ID = "16gtAwWywOlJrSwQ0HZOJcDegcVXfiX2K"
 
-          SPREADSHEET_ID = (
-              "1hPw7hJFHmUuLjaRVK6VBU8n98W1ebuTWLuNSMOCTDcQ"
-          )
+          SPREADSHEET_ID = "1hPw7hJFHmUuLjaRVK6VBU8n98W1ebuTWLuNSMOCTDcQ"
 
           SHEET_NAME = "HiResAudio"
 
@@ -90,7 +86,7 @@ jobs:
 
 
           # =====================================================
-          # GOOGLE AUTH
+          # GOOGLE AUTHENTICATION
           # =====================================================
 
           SCOPES = [
@@ -98,17 +94,10 @@ jobs:
               "https://www.googleapis.com/auth/spreadsheets"
           ]
 
-          credentials = (
-              service_account
-              .Credentials
-              .from_service_account_info(
-                  json.loads(
-                      SERVICE_ACCOUNT_JSON
-                  ),
-                  scopes=SCOPES
-              )
+          credentials = service_account.Credentials.from_service_account_info(
+              json.loads(SERVICE_ACCOUNT_JSON),
+              scopes=SCOPES
           )
-
 
           drive_service = build(
               "drive",
@@ -135,22 +124,28 @@ jobs:
               return str(value).strip()
 
 
-          def clean_title(filename):
+          def get_title(filename):
+
+              """
+              Remove only the final file extension.
+
+              Example:
+              VARDAAT.flac -> VARDAAT
+              """
 
               filename = safe_string(
                   filename
               )
 
-              extension = Path(
-                  filename
-              ).suffix
+              suffix = Path(filename).suffix
 
-              if extension:
-                  filename = filename[
-                      : -len(extension)
-                  ]
+              if suffix:
 
-              return filename.strip()
+                  return filename[
+                      :-len(suffix)
+                  ].strip()
+
+              return filename
 
 
           def normalize_title(value):
@@ -167,10 +162,6 @@ jobs:
 
               return value.strip()
 
-
-          # =====================================================
-          # DRIVE URL
-          # =====================================================
 
           def drive_view_url(file_id):
 
@@ -191,12 +182,12 @@ jobs:
 
 
           # =====================================================
-          # LIST AUDIO FILES
+          # LIST FILES FROM AUDIO FOLDER
           # =====================================================
 
           def list_audio_files():
 
-              files = []
+              audio_files = []
 
               page_token = None
 
@@ -226,12 +217,26 @@ jobs:
                       .execute()
                   )
 
-                  files.extend(
-                      response.get(
-                          "files",
-                          []
+                  for file in response.get(
+                      "files",
+                      []
+                  ):
+
+                      filename = safe_string(
+                          file.get("name")
                       )
-                  )
+
+                      extension = (
+                          Path(filename)
+                          .suffix
+                          .lower()
+                      )
+
+                      if extension in AUDIO_EXTENSIONS:
+
+                          audio_files.append(
+                              file
+                          )
 
                   page_token = response.get(
                       "nextPageToken"
@@ -240,11 +245,11 @@ jobs:
                   if not page_token:
                       break
 
-              return files
+              return audio_files
 
 
           # =====================================================
-          # ENSURE SHEET
+          # ENSURE SHEET EXISTS
           # =====================================================
 
           def ensure_sheet():
@@ -253,19 +258,18 @@ jobs:
                   sheets_service
                   .spreadsheets()
                   .get(
-                      spreadsheetId=
-                          SPREADSHEET_ID
+                      spreadsheetId=SPREADSHEET_ID
                   )
                   .execute()
               )
 
-              existing_sheets = [
+              existing_sheets = {
                   sheet["properties"]["title"]
                   for sheet in spreadsheet.get(
                       "sheets",
                       []
                   )
-              ]
+              }
 
               if SHEET_NAME in existing_sheets:
                   return
@@ -279,8 +283,7 @@ jobs:
                       {
                           "addSheet": {
                               "properties": {
-                                  "title":
-                                      SHEET_NAME
+                                  "title": SHEET_NAME
                               }
                           }
                       }
@@ -291,8 +294,7 @@ jobs:
                   sheets_service
                   .spreadsheets()
                   .batchUpdate(
-                      spreadsheetId=
-                          SPREADSHEET_ID,
+                      spreadsheetId=SPREADSHEET_ID,
                       body=body
                   )
                   .execute()
@@ -300,7 +302,7 @@ jobs:
 
 
           # =====================================================
-          # WRITE SHEET
+          # WRITE HI-RES AUDIO SHEET
           # =====================================================
 
           def write_sheet(rows):
@@ -323,45 +325,42 @@ jobs:
                   rows
               )
 
-              # -----------------------------------------------
+              # -------------------------------------------------
               # CLEAR ONLY HiResAudio TAB
-              # -----------------------------------------------
+              #
+              # Main Media Sheet এবং Covers TAB untouched.
+              # -------------------------------------------------
 
               (
                   sheets_service
                   .spreadsheets()
                   .values()
                   .clear(
-                      spreadsheetId=
-                          SPREADSHEET_ID,
-                      range=
-                          f"{SHEET_NAME}!A:ZZ",
+                      spreadsheetId=SPREADSHEET_ID,
+                      range=f"{SHEET_NAME}!A:ZZ",
                       body={}
                   )
                   .execute()
               )
 
-              # -----------------------------------------------
+              # -------------------------------------------------
               # WRITE NEW DATA
-              # -----------------------------------------------
+              # -------------------------------------------------
 
               (
                   sheets_service
                   .spreadsheets()
                   .values()
                   .update(
-                      spreadsheetId=
-                          SPREADSHEET_ID,
-                      range=
-                          f"{SHEET_NAME}!A1",
-                      valueInputOption=
-                          "RAW",
+                      spreadsheetId=SPREADSHEET_ID,
+                      range=f"{SHEET_NAME}!A1",
+                      valueInputOption="RAW",
                       body={
-                          "values":
-                              values
+                          "values": values
                       }
                   )
                   .execute()
+              )
 
 
           # =====================================================
@@ -369,84 +368,87 @@ jobs:
           # =====================================================
 
           print()
+
           print(
               "======================================"
           )
+
           print(
               "HI-RES AUDIO SCANNER"
           )
+
           print(
               "======================================"
           )
 
           print()
+
           print(
-              "Scanning Audio folder..."
+              "Audio folder:"
           )
 
-          drive_files = (
+          print(
+              AUDIO_FOLDER_ID
+          )
+
+          print()
+
+          print(
+              "Scanning Google Drive..."
+          )
+
+          audio_files = (
               list_audio_files()
           )
 
           print(
-              f"Total files found: "
-              f"{len(drive_files)}"
+              "Hi-Res audio files found: "
+              + str(len(audio_files))
           )
 
 
           # =====================================================
-          # BUILD ROWS
+          # BUILD SHEET ROWS
           # =====================================================
 
-          audio_rows = []
+          rows = []
 
-          seen_titles = set()
+          used_titles = set()
 
-          for file in drive_files:
+          for file in audio_files:
+
+              file_id = safe_string(
+                  file.get("id")
+              )
 
               filename = safe_string(
-                  file.get(
-                      "name",
-                      ""
-                  )
-              )
-
-              extension = (
-                  Path(filename)
-                  .suffix
-                  .lower()
-              )
-
-              if extension not in AUDIO_EXTENSIONS:
-
-                  continue
-
-              file_id = file.get(
-                  "id",
-                  ""
+                  file.get("name")
               )
 
               if not file_id:
-
                   continue
 
-              title = clean_title(
+              if not filename:
+                  continue
+
+              title = get_title(
                   filename
               )
 
               if not title:
-
                   continue
 
-              normalized = normalize_title(
-                  title
+              normalized_title = (
+                  normalize_title(
+                      title
+                  )
               )
 
-              # -----------------------------------------------
-              # Prevent duplicate titles
-              # -----------------------------------------------
+              # -------------------------------------------------
+              # DUPLICATE TITLE
+              # -------------------------------------------------
 
-              if normalized in seen_titles:
+              if normalized_title in used_titles:
 
                   print(
                       "Duplicate title skipped: "
@@ -455,34 +457,43 @@ jobs:
 
                   continue
 
-              seen_titles.add(
-                  normalized
+              used_titles.add(
+                  normalized_title
               )
 
-              format_name = (
-                  extension
-                  .replace(
-                      ".",
-                      ""
-                  )
-                  .upper()
+              extension = (
+                  Path(filename)
+                  .suffix
+                  .lower()
+                  .lstrip(".")
               )
 
-              audio_rows.append([
+              audio_format = (
+                  extension.upper()
+              )
+
+              row = [
                   title,
                   filename,
-                  format_name,
+                  audio_format,
                   drive_view_url(
                       file_id
                   ),
                   drive_download_url(
                       file_id
                   )
-              ])
+              ]
+
+              rows.append(
+                  row
+              )
 
               print(
-                  f"Found: {title} "
-                  f"[{format_name}]"
+                  "Found: "
+                  + title
+                  + " ["
+                  + audio_format
+                  + "]"
               )
 
 
@@ -490,7 +501,7 @@ jobs:
           # SORT BY TITLE
           # =====================================================
 
-          audio_rows.sort(
+          rows.sort(
               key=lambda row:
                   normalize_title(
                       row[0]
@@ -499,52 +510,58 @@ jobs:
 
 
           # =====================================================
-          # WRITE
+          # WRITE SHEET
           # =====================================================
 
           write_sheet(
-              audio_rows
+              rows
           )
 
 
           # =====================================================
-          # REPORT
+          # FINAL REPORT
           # =====================================================
 
           print()
+
           print(
               "======================================"
           )
+
           print(
               "SCAN COMPLETED SUCCESSFULLY"
           )
-          print(
-              "======================================"
-          )
-
-          print(
-              f"Hi-Res Audio files: "
-              f"{len(audio_rows)}"
-          )
-
-          print(
-              f"Sheet: {SHEET_NAME}"
-          )
 
           print(
               "======================================"
           )
+
+          print(
+              "Files written: "
+              + str(len(rows))
+          )
+
+          print(
+              "Sheet: "
+              + SHEET_NAME
+          )
+
+          print(
+              "======================================"
+
 
           PYTHON
 
 
       # =========================================================
-      # RUN SCANNER
+      # RUN HI-RES AUDIO SCANNER
       # =========================================================
 
       - name: Run Hi-Res Audio Scanner
         env:
+
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
 
         run: |
+
           python hires_audio_scanner.py
