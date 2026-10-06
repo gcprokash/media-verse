@@ -25,8 +25,9 @@ const ASSETS_SHEET_ID = "1hPw7hJFHmUuLjaRVK6VBU8n98W1ebuTWLuNSMOCTDcQ";
 const COVERS_SHEET_NAME = "Covers";
 const HIRES_AUDIO_SHEET_NAME = "HiResAudio";
 
-/* প্রতি পেজে দৃশ্যমান গানের সংখ্যা */
+/* প্রতি পেজে দৃশ্যমান আইটেমের সংখ্যা */
 const ITEMS_PER_PAGE = 18;
+const DEFAULT_PAGE_TITLE = document.title;
 
 
 /* =========================================================
@@ -259,7 +260,6 @@ async function loadAllData() {
         embeddedHiRes,
         embeddedHiResInfo: value(c[12]),
         subtitleCount: numberValue(c[13]),
-        /* ডিউরেশন হিসেবে কভার পাথ না নেওয়ার জন্য খালি রাখা হলো */
         duration: "",
         cover: cover ? cover.imageUrl : "",
         coverImageUrls: cover ? cover.imageUrls : [],
@@ -286,6 +286,9 @@ async function loadAllData() {
     renderFeaturedSpotlight();
     render();
 
+    /* সরাসরি ইউআরএল হ্যাশ থাকলে ওপেন হবে */
+    handleInitialRoute();
+
   } catch (error) {
     console.error("MediaVerse loading error:", error);
     showLoadError(error.message);
@@ -305,6 +308,22 @@ function matches(item, filter) {
   if (filter === "multi") return item.audioCount > 1;
   if (filter === "subs") return item.subtitleCount > 0;
   return true;
+}
+
+function setFilter(filter) {
+  activeFilter = filter;
+  visibleCount = ITEMS_PER_PAGE;
+
+  /* ফিল্টার বাটন ও টপবার ন্যাভ লিংক সিঙ্ক */
+  document.querySelectorAll(".filter").forEach(b => {
+    b.classList.toggle("active", (b.dataset.filter || "all") === filter);
+  });
+
+  document.querySelectorAll(".nav a[data-filter]").forEach(l => {
+    l.classList.toggle("active", (l.dataset.filter || "all") === filter);
+  });
+
+  render();
 }
 
 
@@ -352,7 +371,10 @@ function renderFeaturedSpotlight() {
   const coverUrl = latest.coverImageUrls?.[0] || "";
 
   featuredSpotlight.innerHTML = `
-    <div class="spotlight-card" onclick="if (!event.target.closest('.spotlight-actions')) { showDetails('${escapeJs(latest.id)}'); }">
+    <div class="spotlight-card" tabindex="0" role="button" aria-label="Open ${escapeHtml(latest.title)}"
+      onclick="if (!event.target.closest('.spotlight-actions')) { showDetails('${escapeJs(latest.id)}'); }"
+      onkeydown="if ((event.key === 'Enter' || event.key === ' ') && !event.target.closest('.spotlight-actions')) { showDetails('${escapeJs(latest.id)}'); }">
+      
       <div class="spotlight-thumb">
         ${
           coverUrl
@@ -434,7 +456,11 @@ function card(x) {
   ` : "";
 
   return `
-    <article class="card" data-id="${escapeHtml(x.id)}" onclick="if (!event.target.closest('.actions')) { showDetails('${escapeJs(x.id)}'); }" style="cursor:pointer;">
+    <article class="card" data-id="${escapeHtml(x.id)}" tabindex="0" role="button" aria-label="View ${escapeHtml(x.title)}"
+      onclick="if (!event.target.closest('.actions')) { showDetails('${escapeJs(x.id)}'); }"
+      onkeydown="if ((event.key === 'Enter' || event.key === ' ') && !event.target.closest('.actions')) { showDetails('${escapeJs(x.id)}'); }"
+      style="cursor:pointer;">
+      
       <div class="thumb">
         ${getCover(x)}
         <span class="quality">${escapeHtml(x.videoQuality || "—")}</span>
@@ -506,6 +532,7 @@ function render() {
   }
 }
 
+
 /* =========================================================
    8. MEDIA PLAYER & FULLSCREEN ENGINE (CLEAN & CINEMATIC)
    ========================================================= */
@@ -551,7 +578,7 @@ window.playMedia = function(id) {
     return;
   }
 
-  /* সিনেমাটিক ও ক্লিন প্লেয়ার (ড্রাইভের বাড়তি লিঙ্ক ছাড়া) */
+  /* সিনেমাটিক ও ক্লিন প্লেয়ার */
   playerBox.innerHTML = `
     <div style="
       background: linear-gradient(180deg, rgba(14, 29, 48, 0.95), rgba(7, 17, 31, 0.9));
@@ -623,22 +650,20 @@ window.playMedia = function(id) {
         </div>
       </div>
 
-      <!-- আইফ্রেম ভিডিও র্যাপার (পারফেক্ট ১৬:৯ সিনেমাটিক রেশিও) -->
-        <div
-      id="playerWrapper"
-      style="
-        position: relative;
-        width: 100%;
-        aspect-ratio: 16/9;
-        background: #000000;
-        border-radius: 14px;
-        overflow: hidden;
-        /* প্রিমিয়াম সিনেমাটিক বর্ডার ও সফট গ্লো */
-        border: 1.5px solid rgba(25, 215, 255, 0.45);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(25, 215, 255, 0.15);
-      "
-    >
-
+      <!-- আইফ্রেম ভিডিও র্যাপার -->
+      <div
+        id="playerWrapper"
+        style="
+          position: relative;
+          width: 100%;
+          aspect-ratio: 16/9;
+          background: #000000;
+          border-radius: 14px;
+          overflow: hidden;
+          border: 1.5px solid rgba(25, 215, 255, 0.45);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(25, 215, 255, 0.15);
+        "
+      >
         <iframe
           src="${escapeHtml(previewUrl)}"
           style="position:absolute; inset:0; width:100%; height:100%; border:0;"
@@ -668,11 +693,7 @@ window.playMedia = function(id) {
   `;
 
   playerBox.hidden = false;
-
-  playerBox.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
+  playerBox.scrollIntoView({ behavior: "smooth", block: "start" });
 };
 
 window.closeMediaPlayer = function() {
@@ -681,8 +702,6 @@ window.closeMediaPlayer = function() {
   playerBox.innerHTML = "";
   playerBox.hidden = true;
 };
-
-
 
 
 /* =========================================================
@@ -696,6 +715,9 @@ window.showDetails = function(id, fromHistory = false) {
   if (!fromHistory) {
     history.pushState({ mediaId: String(id) }, "", "#media/" + encodeURIComponent(String(id)));
   }
+
+  /* পেজ টাইটেল গানটির নামে আপডেট করা হচ্ছে */
+  document.title = `${x.title || "Media"} — MediaVerse`;
 
   if (!detailsSection || !detailsContent) return;
   const urls = x.coverImageUrls || [];
@@ -758,7 +780,7 @@ window.showDetails = function(id, fromHistory = false) {
           ${x.videoUrl ? `<a href="#" class="play-button" onclick="event.preventDefault(); playMedia('${escapeJs(x.id)}');">▶ Play</a>` : ""}
           ${x.downloadUrl ? `<a class="download-button" href="${escapeHtml(x.downloadUrl)}" target="_blank" rel="noopener">↓ Video Download</a>` : ""}
           ${x.audioUrl ? `<a class="audio-download-button" href="${escapeHtml(x.audioUrl)}" target="_blank" rel="noopener" download>🎧 Hi-Res Audio</a>` : ""}
-          <button type="button" class="copy-link-button" onclick="copyMediaLink('${escapeJs(x.id)}', this)">🔗 Copy Link</button>
+          <button type="button" class="copy-link-button" onclick="shareOrCopyMediaLink('${escapeJs(x.id)}', this)">🔗 Share / Link</button>
         </div>
       </div>
     </div>
@@ -766,7 +788,7 @@ window.showDetails = function(id, fromHistory = false) {
 
   detailsSection.hidden = false;
 
-  /* ডিটেইলস ভিউতে হিরো ব্যানার, লাইব্রেরি ও স্পটলাইট লুকিয়ে ফেলা হচ্ছে */
+  /* ডিটেইলস ভিউতে বাকি সেকশন লুকিয়ে ফেলা হচ্ছে */
   if (heroSection) heroSection.style.display = "none";
   if (librarySection) librarySection.style.display = "none";
   if (featuredSpotlight) featuredSpotlight.style.display = "none";
@@ -778,7 +800,10 @@ function returnToLibrary() {
   closeMediaPlayer();
   if (detailsSection) detailsSection.hidden = true;
 
-  /* লাইব্রেরিতে ব্যাক করলে হিরো ব্যানার এবং বাকি সেকশন ফিরিয়ে আনা হচ্ছে */
+  /* মূল পেজ টাইটেল ফিরিয়ে আনা হচ্ছে */
+  document.title = DEFAULT_PAGE_TITLE;
+
+  /* লাইব্রেরি ও ব্যানার ফিরিয়ে আনা */
   if (heroSection) heroSection.style.display = "";
   if (librarySection) librarySection.style.display = "";
   if (featuredSpotlight) featuredSpotlight.style.display = "";
@@ -786,9 +811,25 @@ function returnToLibrary() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-window.copyMediaLink = function(id, btn) {
+/* স্মার্ট শেয়ার ও কপি লিঙ্ক ফাংশন (Web Share API সহ) */
+window.shareOrCopyMediaLink = function(id, btn) {
+  const x = MEDIA.find(item => String(item.id) === String(id));
   const fullUrl = window.location.origin + window.location.pathname + "#media/" + encodeURIComponent(id);
 
+  if (navigator.share) {
+    navigator.share({
+      title: (x ? x.title : "MediaVerse"),
+      text: `Stream "${x ? x.title : 'Media'}" on MediaVerse in High Quality!`,
+      url: fullUrl
+    }).catch(() => {
+      copyToClipboardFallback(fullUrl, btn);
+    });
+  } else {
+    copyToClipboardFallback(fullUrl, btn);
+  }
+};
+
+function copyToClipboardFallback(fullUrl, btn) {
   navigator.clipboard.writeText(fullUrl).then(() => {
     const originalText = btn.innerHTML;
     btn.innerHTML = "✓ Copied!";
@@ -805,30 +846,22 @@ window.copyMediaLink = function(id, btn) {
   }).catch(() => {
     prompt("লিংকটি কপি করে নিন:", fullUrl);
   });
-};
+}
 
 
 /* =========================================================
    10. EVENT HANDLERS & APP BOOTSTRAP
    ========================================================= */
 
-/* ফিল্টার বাটন হ্যান্ডলার */
+/* ফিল্টার বাটন ও ন্যাভ লিংক হ্যান্ডলার */
 document.querySelectorAll(".filter").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    activeFilter = btn.dataset.filter || "all";
-    visibleCount = ITEMS_PER_PAGE;
-    render();
-  });
+  btn.addEventListener("click", () => setFilter(btn.dataset.filter || "all"));
 });
 
-/* হেডার ন্যাভ লিংক ফিল্টার */
 document.querySelectorAll(".nav a[data-filter]").forEach(link => {
-  link.addEventListener("click", () => {
-    activeFilter = link.dataset.filter || "all";
-    visibleCount = ITEMS_PER_PAGE;
-    render();
+  link.addEventListener("click", (e) => {
+    e.preventDefault();
+    setFilter(link.dataset.filter || "all");
   });
 });
 
@@ -855,10 +888,29 @@ if (closeDetailsBtn) {
   });
 }
 
-/* অ্যান্ড্রয়েড/ব্রাউজার ব্যাক বাটন হ্যান্ডলার */
+/* অ্যান্ড্রয়েড/ব্রাউজার ব্যাক ও ফরোয়ার্ড বাটন হ্যান্ডলার */
 window.addEventListener("popstate", () => {
-  if (!location.hash.startsWith("#media/")) {
+  if (location.hash.startsWith("#media/")) {
+    const id = decodeURIComponent(location.hash.substring("#media/".length));
+    showDetails(id, true);
+  } else {
     returnToLibrary();
+  }
+});
+
+/* কিবোর্ড Escape (Esc) বাটন সাপোর্ট */
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    const playerBox = document.getElementById("mediaPlayer");
+    if (playerBox && !playerBox.hidden && playerBox.innerHTML.trim() !== "") {
+      closeMediaPlayer();
+    } else if (detailsSection && !detailsSection.hidden) {
+      if (location.hash.startsWith("#media/")) {
+        history.back();
+      } else {
+        returnToLibrary();
+      }
+    }
   }
 });
 
@@ -881,21 +933,16 @@ if (scrollTopBtn) {
   });
 }
 
-/* ইউআরএল হ্যাশ থেকে সরাসরি মিডিয়া ওপেন করা */
-window.addEventListener("load", () => {
+/* সরাসরি লিঙ্কে প্রবেশ করলে মিডিয়া ওপেন করার ফাংশন */
+function handleInitialRoute() {
   const hash = location.hash;
   if (hash.startsWith("#media/")) {
     const id = decodeURIComponent(hash.substring("#media/".length));
-    const waitForMedia = setInterval(() => {
-      if (MEDIA.length > 0) {
-        clearInterval(waitForMedia);
-        showDetails(id, true);
-      }
-    }, 100);
-
-    setTimeout(() => clearInterval(waitForMedia), 20000);
+    if (MEDIA.length > 0) {
+      showDetails(id, true);
+    }
   }
-});
+}
 
 /* অ্যাপ্লিকেশন স্টার্ট */
 loadAllData();
