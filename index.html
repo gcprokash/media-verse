@@ -5,9 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#07111f">
   <title>MediaVerse — Music • Video • Hi-Res Audio</title>
+
+  <!-- TAB ICON (FAVICON) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%2307111f'/><rect x='4' y='4' width='92' height='92' rx='22' fill='none' stroke='%2319d7ff' stroke-width='6'/><text x='50%' y='63%' text-anchor='middle' font-family='sans-serif' font-size='42' font-weight='900' fill='%2319d7ff'>MV</text></svg>">
+
+  <!-- STYLESHEET -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <!-- =========================================================
+       1. TOPBAR & NAVIGATION
+       ========================================================= -->
   <header class="topbar">
     <a class="brand" href="#">
       <span class="brand-mark">MV</span>
@@ -29,9 +38,14 @@
     </div>
   </header>
 
+  <!-- =========================================================
+       MAIN CONTENT CONTAINER
+       ========================================================= -->
   <main id="home">
+
+    <!-- 2. HERO BANNER -->
     <section class="hero">
-      <div>
+      <div class="hero-content">
         <p class="eyebrow">DISCOVER</p>
         <h1>High Quality <span>Music & Video</span></h1>
         <p class="hero-sub">2K Video • Hi-Res Audio • Multi Audio • Tri-Lingual Subtitles</p>
@@ -43,17 +57,18 @@
         </div>
       </div>
     </section>
-    
-    <!-- LATEST RELEASE SPOTLIGHT -->
-<section id="featuredSpotlight" class="featured-section" hidden></section>
 
+    <!-- 3. LATEST RELEASE SPOTLIGHT -->
+    <section id="featuredSpotlight" class="featured-section" hidden></section>
 
+    <!-- 4. MEDIA LIBRARY & GRID -->
     <section id="library" class="library">
       <div class="section-head">
         <div>
           <p class="eyebrow">MEDIA LIBRARY</p>
           <h2>Browse Media</h2>
         </div>
+
         <div class="filters">
           <button class="filter active" data-filter="all">All</button>
           <button class="filter" data-filter="2k">2K</button>
@@ -63,21 +78,40 @@
           <button class="filter" data-filter="subs">Subtitles</button>
         </div>
       </div>
+
       <div id="mediaGrid" class="media-grid"></div>
       <p id="emptyState" class="empty" hidden>No media found.</p>
+
+      <!-- LOAD MORE -->
+      <div id="loadMoreContainer" class="load-more-container" hidden>
+        <button id="loadMoreBtn" class="load-more-btn" type="button">
+          Load More (+18) ↓
+        </button>
+      </div>
     </section>
 
+    <!-- 5. DETAILS VIEW & PLAYER -->
     <section id="details" class="details-section" hidden>
-      <button id="closeDetails" class="close-btn">← Back to Library</button>
+      <button id="closeDetails" class="close-btn" type="button">← Back to Library</button>
       <div id="detailsContent"></div>
     </section>
+
   </main>
 
+  <!-- =========================================================
+       6. FOOTER
+       ========================================================= -->
   <footer>
     <b>MediaVerse</b>
     <span>Music • Video • Hi-Res Audio • Multi Audio</span>
   </footer>
 
+  <!-- =========================================================
+       7. FLOATING ACTIONS
+       ========================================================= -->
+  <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top" hidden>↑</button>
+
+  <!-- APPLICATION SCRIPT -->
   <script src="app.js"></script>
 </body>
 </html>
