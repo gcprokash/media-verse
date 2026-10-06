@@ -1062,10 +1062,54 @@ footer {
     font-size: 16px;
   }
 
-  .feature-row {
-    font-size: 11px;
+  /* ১. হিরো সেকশনের ব্যাজ এক লাইনে হরাইজন্টাল স্ক্রোল */
+    .feature-row {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    gap: 8px;
+    font-size: 10px;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* ফায়ারফক্স স্ক্রোলবার হাইড */
+  }
+
+  /* ক্রোম ও সাফারিতে স্ক্রোলবার হাইড */
+  .feature-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* বাটনগুলো যাতে চ্যাপ্টা বা ভেঙে না যায় */
+  .feature-row span {
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 6px 10px;
+  }
+
+
+  /* ২. লাইব্রেরির ফিল্টার বাটন এক লাইনে হরাইজন্টাল স্ক্রোল */
+  .filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    width: 100%;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter {
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 }
+
 
 /* ---------------------------------------------------------
    BREAKPOINT 5: SMALL SCREEN PHONES (max-width: 380px)

@@ -506,9 +506,8 @@ function render() {
   }
 }
 
-
 /* =========================================================
-   8. MEDIA PLAYER & FULLSCREEN ENGINE
+   8. MEDIA PLAYER & FULLSCREEN ENGINE (CLEAN & CINEMATIC)
    ========================================================= */
 
 window.togglePlayerFullscreen = function() {
@@ -543,49 +542,137 @@ window.playMedia = function(id) {
 
   if (!previewUrl) {
     playerBox.innerHTML = `
-      <div style="padding:30px; text-align:center; color:#8fa8bf;">
-        <p>Google Drive video link could not be converted to a player.</p>
-        ${x.videoUrl ? `<a href="${escapeHtml(x.videoUrl)}" target="_blank" rel="noopener" style="display:inline-block; margin-top:10px; padding:10px 15px; background:var(--blue); color:white; border-radius:9px; font-weight:800;">Open Video</a>` : ""}
+      <div style="padding:25px; text-align:center; color:#8fa8bf; background:#0b1625; border-radius:14px; border:1px solid #1a3450;">
+        <p style="margin:0 0 10px; font-size:14px;">গুগল ড্রাইভ ভিডিও লিঙ্ক প্লেয়ারে কনভার্ট করা যায়নি।</p>
+        ${x.videoUrl ? `<a href="${escapeHtml(x.videoUrl)}" target="_blank" rel="noopener" style="display:inline-block; padding:10px 18px; background:linear-gradient(135deg, #1595ff, #0b7fe0); color:white; border-radius:10px; font-weight:800; text-decoration:none;">ভিডিও ওপেন করুন</a>` : ""}
       </div>
     `;
     playerBox.hidden = false;
     return;
   }
 
+  /* সিনেমাটিক ও ক্লিন প্লেয়ার (ড্রাইভের বাড়তি লিঙ্ক ছাড়া) */
   playerBox.innerHTML = `
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-      <span style="font-size:12px; color:#8fa8bf; font-weight:700;">🎬 DRIVE PLAYER</span>
-      <div style="display:flex; gap:8px;">
-        <button type="button" onclick="togglePlayerFullscreen()" style="background:var(--blue); color:white; border:0; padding:6px 12px; border-radius:8px; cursor:pointer; font-size:12px; font-weight:800; display:inline-flex; align-items:center; gap:4px;">
-          ⛶ Fullscreen
-        </button>
-        <button type="button" onclick="closeMediaPlayer()" style="background:var(--line); color:var(--text); border:0; padding:6px 10px; border-radius:8px; cursor:pointer; font-size:12px; font-weight:700;">
-          ✕ Close
-        </button>
+    <div style="
+      background: linear-gradient(180deg, rgba(14, 29, 48, 0.95), rgba(7, 17, 31, 0.9));
+      border: 1px solid rgba(25, 215, 255, 0.3);
+      border-radius: 18px;
+      padding: 14px;
+      margin-top: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(25, 215, 255, 0.12);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    ">
+      
+      <!-- প্লেয়ার হেডার: টাইটেল ও কন্ট্রোল বাটন -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding:0 2px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; background:rgba(25, 215, 255, 0.15); border:1px solid rgba(25, 215, 255, 0.3); border-radius:8px; font-size:13px;">
+            🎬
+          </span>
+          <span style="font-size:12px; font-weight:900; color:var(--cyan); letter-spacing:1px; text-transform:uppercase;">
+            Cinema Player
+          </span>
+        </div>
+
+        <div style="display:flex; gap:8px;">
+          <button
+            type="button"
+            onclick="togglePlayerFullscreen()"
+            style="
+              background: linear-gradient(135deg, #1595ff, #0070d6);
+              color: #ffffff;
+              border: 0;
+              padding: 7px 14px;
+              border-radius: 9px;
+              cursor: pointer;
+              font-size: 12px;
+              font-weight: 800;
+              display: inline-flex;
+              align-items: center;
+              gap: 5px;
+              box-shadow: 0 4px 14px rgba(21, 149, 255, 0.35);
+              transition: transform 0.15s ease;
+            "
+            onmouseover="this.style.transform='scale(1.03)'"
+            onmouseout="this.style.transform='scale(1)'"
+          >
+            ⛶ Fullscreen
+          </button>
+
+          <button
+            type="button"
+            onclick="closeMediaPlayer()"
+            style="
+              background: rgba(26, 52, 80, 0.85);
+              color: #c7d5e3;
+              border: 1px solid rgba(255, 255, 255, 0.1);
+              padding: 7px 12px;
+              border-radius: 9px;
+              cursor: pointer;
+              font-size: 12px;
+              font-weight: 700;
+              transition: all 0.2s ease;
+            "
+            onmouseover="this.style.background='#ff3f9b'; this.style.color='#ffffff';"
+            onmouseout="this.style.background='rgba(26, 52, 80, 0.85)'; this.style.color='#c7d5e3';"
+          >
+            ✕ Close
+          </button>
+        </div>
       </div>
-    </div>
 
-    <div id="playerWrapper" style="position:relative; width:100%; aspect-ratio:16/9; min-height:240px; background:#000; border-radius:14px; overflow:hidden; border:1px solid var(--line); box-shadow:0 15px 45px rgba(0,0,0,.35);">
-      <iframe
-        src="${escapeHtml(previewUrl)}"
-        style="position:absolute; inset:0; width:100%; height:100%; border:0;"
-        allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-        allowfullscreen
-        referrerpolicy="no-referrer"
-        loading="lazy"
-        title="${escapeHtml(x.title || "Media Player")}"
-      ></iframe>
-    </div>
+      <!-- আইফ্রেম ভিডিও র্যাপার (পারফেক্ট ১৬:৯ সিনেমাটিক রেশিও) -->
+        <div
+      id="playerWrapper"
+      style="
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16/9;
+        background: #000000;
+        border-radius: 14px;
+        overflow: hidden;
+        /* প্রিমিয়াম সিনেমাটিক বর্ডার ও সফট গ্লো */
+        border: 1.5px solid rgba(25, 215, 255, 0.45);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(25, 215, 255, 0.15);
+      "
+    >
 
-    <div style="margin-top:6px; text-align:right;">
-      <a href="${escapeHtml(x.videoUrl)}" target="_blank" rel="noopener" style="font-size:11px; color:var(--cyan); text-decoration:underline;">
-        ড্রাইভ অ্যাপে সরাসরি দেখতে এখানে চাপুন ↗
-      </a>
+        <iframe
+          src="${escapeHtml(previewUrl)}"
+          style="position:absolute; inset:0; width:100%; height:100%; border:0;"
+          allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+          allowfullscreen
+          referrerpolicy="no-referrer"
+          loading="lazy"
+          title="${escapeHtml(x.title || "Media Player")}"
+        ></iframe>
+      </div>
+
+      <!-- মিনিমাল স্ট্যাটাস বার -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding:0 4px;">
+        <span style="font-size:11px; color:var(--muted); font-weight:600; display:inline-flex; align-items:center; gap:5px;">
+          <span style="width:7px; height:7px; background:var(--green); border-radius:50%; display:inline-block;"></span>
+          HD Stream Active
+        </span>
+
+        ${x.subtitleCount > 0 ? `
+          <span style="font-size:11px; color:#46e29a; font-weight:700;">
+            📝 ${x.subtitleCount} Subtitles Available
+          </span>
+        ` : ""}
+      </div>
+
     </div>
   `;
 
   playerBox.hidden = false;
-  playerBox.scrollIntoView({ behavior: "smooth", block: "center" });
+
+  playerBox.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
 };
 
 window.closeMediaPlayer = function() {
@@ -594,6 +681,8 @@ window.closeMediaPlayer = function() {
   playerBox.innerHTML = "";
   playerBox.hidden = true;
 };
+
+
 
 
 /* =========================================================
