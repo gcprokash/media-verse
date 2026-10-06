@@ -8,7 +8,7 @@
    4. Media Library, Filters & Grid
    5. Media Cards & Badges
    6. Details View, Metadata & Actions
-   7. Footer
+   7. Footer (Copyright & Disclaimer)
    8. Floating Actions (Scroll To Top)
    9. Responsive Breakpoints (5-Tier Responsive System)
    ========================================================= */
@@ -40,8 +40,12 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
+html, body {
   margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden; /* পুরো পেজ ডানে উপচে পড়া বন্ধ করবে */
   background: radial-gradient(
     circle at 50% -10%,
     #12365a 0,
@@ -196,6 +200,7 @@ a {
 
 .hero-content {
   max-width: 900px;
+  min-width: 0;
 }
 
 .eyebrow {
@@ -813,16 +818,89 @@ h2 {
 
 
 /* =========================================================
-   7. FOOTER
+   7. FOOTER (COPYRIGHT & DISCLAIMER)
    ========================================================= */
 
 footer {
+  background: linear-gradient(180deg, rgba(7, 17, 31, 0.4), rgba(4, 10, 19, 0.95));
   border-top: 1px solid var(--line);
-  padding: 28px 5%;
+  padding: 40px 20px 30px;
+  margin-top: 50px;
+  color: var(--muted);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 18px;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer-brand .brand-mark {
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--cyan);
+  border: 1.5px solid var(--cyan);
+  padding: 2px 7px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.footer-brand b {
+  color: #ffffff;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+}
+
+.footer-brand p {
+  font-size: 13px;
+  color: #8fa8bf;
+  margin: 0;
+}
+
+.footer-disclaimer {
+  max-width: 760px;
+  background: rgba(14, 29, 48, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 12px 18px;
+}
+
+.footer-disclaimer p {
+  font-size: 11px;
+  line-height: 1.6;
+  color: #728ca3;
+  margin: 0;
+}
+
+.footer-disclaimer b {
+  color: var(--cyan);
+}
+
+.footer-bottom {
+  width: 100%;
+  max-width: 760px;
   display: flex;
   justify-content: space-between;
-  color: var(--muted);
-  font-size: 13px;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 15px;
+  font-size: 12px;
+  color: #637d95;
+}
+
+.footer-bottom b {
+  color: #c7d5e3;
 }
 
 
@@ -941,7 +1019,16 @@ footer {
 @media (max-width: 600px) {
   .hero {
     min-height: 270px;
-    padding: 40px 20px;
+    padding: 35px 16px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .hero-content {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
 
   .library,
@@ -1063,7 +1150,7 @@ footer {
   }
 
   /* ১. হিরো সেকশনের ব্যাজ এক লাইনে হরাইজন্টাল স্ক্রোল */
-    .feature-row {
+  .feature-row {
     display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -1074,27 +1161,26 @@ footer {
     font-size: 10px;
     padding-bottom: 6px;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* ফায়ারফক্স স্ক্রোলবার হাইড */
+    scrollbar-width: none;
   }
 
-  /* ক্রোম ও সাফারিতে স্ক্রোলবার হাইড */
   .feature-row::-webkit-scrollbar {
     display: none;
   }
 
-  /* বাটনগুলো যাতে চ্যাপ্টা বা ভেঙে না যায় */
   .feature-row span {
     white-space: nowrap;
     flex-shrink: 0;
     padding: 6px 10px;
   }
 
-
   /* ২. লাইব্রেরির ফিল্টার বাটন এক লাইনে হরাইজন্টাল স্ক্রোল */
   .filters {
+    display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
     width: 100%;
+    max-width: 100%;
     padding-bottom: 6px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -1108,8 +1194,23 @@ footer {
     white-space: nowrap;
     flex-shrink: 0;
   }
-}
 
+  /* ৩. মোবাইল ফুটার অ্যাডজাস্টমেন্ট */
+  footer {
+    padding: 30px 16px 25px;
+  }
+
+  .footer-disclaimer {
+    padding: 10px 14px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+    font-size: 11px;
+  }
+}
 
 /* ---------------------------------------------------------
    BREAKPOINT 5: SMALL SCREEN PHONES (max-width: 380px)
