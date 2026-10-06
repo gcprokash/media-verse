@@ -1111,9 +1111,9 @@ function renderFeaturedSpotlight() {
   }
 
 
-  /* শিটের শেষ আইটেমটিকে লেটেস্ট হিসেবে ধরা হলো */
+  /* শিটের ১ম সারির (ইনডেক্স ০) গানটিই লেটেস্ট */
   const latest =
-    MEDIA[MEDIA.length - 1];
+    MEDIA[0];
 
 
   const coverUrl =
