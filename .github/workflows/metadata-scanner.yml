@@ -2,26 +2,27 @@ name: Media Metadata Scanner
 
 permissions:
   contents: write
-  
+
 on:
   workflow_dispatch:
-
   schedule:
-    - cron: "*/5 * * * *"
+    # প্রতি ৩০ মিনিট পর পর ব্যাকগ্রাউন্ডে স্বয়ংক্রিয়ভাবে স্ক্যান হবে
+    - cron: "*/30 * * * *"
 
+# একাধিক রান একসাথে শুরু হয়ে কনফ্লিক্ট হওয়া আটকাবে
+concurrency:
+  group: metadata-scanner
+  cancel-in-progress: false
 
 jobs:
-
   scan:
-
     runs-on: ubuntu-latest
+    timeout-minutes: 30 # সর্বোচ্চ ৩০ মিনিটের টাইমআউট
 
     steps:
-
       # =========================================================
       # CHECKOUT
       # =========================================================
-
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -29,7 +30,6 @@ jobs:
       # =========================================================
       # INSTALL FFMPEG
       # =========================================================
-
       - name: Install FFmpeg
         run: |
           sudo apt-get update
@@ -39,7 +39,6 @@ jobs:
       # =========================================================
       # INSTALL PYTHON PACKAGES
       # =========================================================
-
       - name: Install Python Packages
         run: |
           python -m pip install --upgrade pip
@@ -49,7 +48,6 @@ jobs:
       # =========================================================
       # CREATE METADATA SCANNER
       # =========================================================
-
       - name: Create Metadata Scanner
         run: |
 
@@ -434,10 +432,6 @@ jobs:
 
               artists = []
 
-              # -------------------------------------------------
-              # FORMAT TAGS
-              # -------------------------------------------------
-
               format_data = probe.get(
                   "format",
                   {}
@@ -453,10 +447,6 @@ jobs:
                       format_tags
                   )
               )
-
-              # -------------------------------------------------
-              # STREAM TAGS
-              # -------------------------------------------------
 
               for stream in probe.get(
                   "streams",
@@ -685,10 +675,6 @@ jobs:
                   media_filename
               )
 
-              # -------------------------------------------------
-              # EXACT
-              # -------------------------------------------------
-
               for cover in cover_files:
 
                   cover_name = normalize_text(
@@ -700,10 +686,6 @@ jobs:
 
                   if cover_name == target_filename:
                       return cover
-
-              # -------------------------------------------------
-              # PARTIAL
-              # -------------------------------------------------
 
               for cover in cover_files:
 
@@ -965,11 +947,6 @@ jobs:
 
           # =====================================================
           # MANUAL LANGUAGE MAP
-          #
-          # If the source file does not contain a Language tag,
-          # add the original language here using the Title.
-          # Example:
-          # "VARDAAT": "Haryanvi",
           # =====================================================
 
           LANGUAGE_MAP = {
@@ -996,10 +973,6 @@ jobs:
                   {}
               )
 
-              # -------------------------------------------------
-              # TITLE
-              # -------------------------------------------------
-
               raw_title = (
                   tags.get("title")
                   or tags.get("TITLE")
@@ -1011,17 +984,9 @@ jobs:
                   raw_title
               )
 
-              # -------------------------------------------------
-              # ARTIST
-              # -------------------------------------------------
-
               artist = get_artist_from_probe(
                   probe
               )
-
-              # -------------------------------------------------
-              # ALBUM
-              # -------------------------------------------------
 
               album = (
                   tags.get("album")
@@ -1034,10 +999,6 @@ jobs:
                   album
               )
 
-              # -------------------------------------------------
-              # COMPOSER
-              # -------------------------------------------------
-
               composer = (
                   tags.get("composer")
                   or tags.get("COMPOSER")
@@ -1049,22 +1010,11 @@ jobs:
                   composer
               )
 
-              # -------------------------------------------------
-              # GENRE
-              # -------------------------------------------------
-
               genre = safe_string(
                   tags.get("genre")
                   or tags.get("GENRE")
                   or tags.get("Genre")
               )
-
-              # -------------------------------------------------
-              # LANGUAGE
-              #
-              # Prefer real metadata from the source file.
-              # If it is missing, use the manual map above.
-              # -------------------------------------------------
 
               language = safe_string(
                   tags.get("language")
@@ -1634,20 +1584,12 @@ jobs:
                           "================================"
                       )
 
-                      # -----------------------------------------
-                      # Remove incomplete file
-                      # -----------------------------------------
-
                       if output_file.exists():
 
                           try:
                               output_file.unlink()
                           except:
                               pass
-
-                      # -----------------------------------------
-                      # Request
-                      # -----------------------------------------
 
                       request = (
                           drive_service
@@ -1656,10 +1598,6 @@ jobs:
                               fileId=file_id
                           )
                       )
-
-                      # -----------------------------------------
-                      # Download
-                      # -----------------------------------------
 
                       with open(
                           output_file,
@@ -1695,10 +1633,6 @@ jobs:
                                       "Download progress: "
                                       f"{progress}%"
                                   )
-
-                      # -----------------------------------------
-                      # Verify
-                      # -----------------------------------------
 
                       if (
                           output_file.exists()
@@ -1939,10 +1873,6 @@ jobs:
               )
 
 
-              # =================================================
-              # DOWNLOAD
-              # =================================================
-
               download_success = (
                   download_drive_file(
                       file_id,
@@ -1969,10 +1899,6 @@ jobs:
                   continue
 
 
-              # =================================================
-              # FFPROBE
-              # =================================================
-
               try:
 
                   probe = ffprobe_file(
@@ -1995,10 +1921,6 @@ jobs:
 
                   continue
 
-
-              # =================================================
-              # METADATA
-              # =================================================
 
               metadata = get_metadata(
                   probe,
@@ -2069,10 +1991,6 @@ jobs:
               )
 
 
-              # =================================================
-              # VIDEO
-              # =================================================
-
               current_video_rows = (
                   scan_video_streams(
                       probe,
@@ -2086,10 +2004,6 @@ jobs:
               )
 
 
-              # =================================================
-              # AUDIO
-              # =================================================
-
               current_audio_rows = (
                   scan_audio_streams(
                       probe,
@@ -2102,10 +2016,6 @@ jobs:
               )
 
 
-              # =================================================
-              # SUBTITLE
-              # =================================================
-
               current_subtitle_rows = (
                   scan_subtitle_streams(
                       probe,
@@ -2117,10 +2027,6 @@ jobs:
                   current_subtitle_rows
               )
 
-
-              # =================================================
-              # VIDEO SUMMARY
-              # =================================================
 
               if current_video_rows:
 
@@ -2152,10 +2058,6 @@ jobs:
                   quality = ""
 
 
-              # =================================================
-              # AUDIO SUMMARY
-              # =================================================
-
               audio_count = len(
                   current_audio_rows
               )
@@ -2171,10 +2073,6 @@ jobs:
 
               )
 
-
-              # =================================================
-              # COVER
-              # =================================================
 
               cover_source = ""
 
@@ -2315,10 +2213,6 @@ jobs:
                       })
 
 
-              # =================================================
-              # MEDIA ROW
-              # =================================================
-
               media_rows.append([
 
                   media_id,
@@ -2362,10 +2256,6 @@ jobs:
               ])
 
 
-              # =================================================
-              # FILE ROW
-              # =================================================
-
               file_rows.append([
 
                   file_id,
@@ -2396,10 +2286,6 @@ jobs:
 
               ])
 
-
-              # =================================================
-              # MEDIA JSON
-              # =================================================
 
               media_json.append({
 
@@ -2581,11 +2467,6 @@ jobs:
                   sheet_name
               )
 
-
-              # -------------------------------------------------
-              # CLEAR OLD DATA
-              # -------------------------------------------------
-
               (
                   sheets_service
                   .spreadsheets()
@@ -2598,18 +2479,7 @@ jobs:
                   .execute()
               )
 
-
-              # -------------------------------------------------
-              # IMPORTANT FIX
-              #
-              # Dictionary → List
-              #
-              # Google Sheets API receives rows according
-              # to the exact header order.
-              # -------------------------------------------------
-
               prepared_rows = []
-
 
               for row in rows:
 
@@ -2639,11 +2509,6 @@ jobs:
                           row
                       )
 
-
-              # -------------------------------------------------
-              # FINAL VALUES
-              # -------------------------------------------------
-
               values = [
                   headers
               ]
@@ -2651,11 +2516,6 @@ jobs:
               values.extend(
                   prepared_rows
               )
-
-
-              # -------------------------------------------------
-              # WRITE
-              # -------------------------------------------------
 
               (
                   sheets_service
@@ -2681,7 +2541,6 @@ jobs:
                   .execute()
               )
 
-
               print(
                   f"{sheet_name}: "
                   f"{len(prepared_rows)} rows written."
@@ -2698,13 +2557,11 @@ jobs:
               media_rows
           )
 
-
           write_sheet(
               "Files",
               SHEET_HEADERS["Files"],
               file_rows
           )
-
 
           write_sheet(
               "Video",
@@ -2712,20 +2569,17 @@ jobs:
               video_rows
           )
 
-
           write_sheet(
               "Audio",
               SHEET_HEADERS["Audio"],
               audio_rows
           )
 
-
           write_sheet(
               "Subtitle",
               SHEET_HEADERS["Subtitle"],
               subtitle_rows
           )
-
 
           write_sheet(
               "Covers",
@@ -2790,18 +2644,15 @@ jobs:
               "======================================"
           )
 
-
           PYTHON
 
 
       # =========================================================
       # RUN SCANNER
       # =========================================================
-
       - name: Run Metadata Scanner
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
-
         run: |
           python scanner.py
 
@@ -2809,28 +2660,26 @@ jobs:
       # =========================================================
       # GIT STATUS
       # =========================================================
-
       - name: Git Status
         run: |
           git status --short
 
 
       # =========================================================
-      # COMMIT
+      # COMMIT & SAFE PUSH
       # =========================================================
-
       - name: Commit Updated Metadata
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git config user.name \
-            "github-actions[bot]"
-
-          git config user.email \
-            "41898282+github-actions[bot]@users.noreply.github.com"
-
+          mkdir -p covers
           git add media.json covers/
 
-          git diff --cached --quiet \
-            || git commit -m "Auto update media metadata"
-
-          git push
+          if ! git diff --cached --quiet; then
+            git commit -m "Auto update media metadata"
+            git pull --rebase origin main || true
+            git push origin main
+          else
+            echo "No changes to commit."
+          fi
