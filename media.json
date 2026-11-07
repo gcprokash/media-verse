@@ -1,5 +1,267 @@
 [
   {
+    "Media_ID": "30091eb83f66b3e7",
+    "Title": "Mahiya",
+    "File_Name": "Mahiya [1440p] [VP9] [Multi Audio] [17 Subtitle Tracks] [GCP].mkv",
+    "Artist": "Badshah, Shreya Ghoshal, Hiten",
+    "Album": "Mahiya - Single",
+    "Composer": "Badshah",
+    "Genre": "Pop",
+    "Language": "Hindi",
+    "Resolution": "2560x1440",
+    "Video_Codec": "vp9",
+    "Video_Quality": "2K",
+    "Audio_Count": 2,
+    "Hi_Res_Audio": 1,
+    "Subtitle_Count": 17,
+    "Cover": "covers/30091eb83f66b3e7.svg",
+    "Cover_Source": "Generated",
+    "Drive_URL": "https://drive.google.com/file/d/1kYtnlhDmXoleA0xfVGJKSVhSIYNmW-b_/view",
+    "Download_URL": "https://drive.google.com/uc?export=download&id=1kYtnlhDmXoleA0xfVGJKSVhSIYNmW-b_",
+    "Video": [
+      {
+        "Video_ID": "30091eb83f66b3e7-V1",
+        "Media_ID": "30091eb83f66b3e7",
+        "File_Name": "Mahiya [1440p] [VP9] [Multi Audio] [17 Subtitle Tracks] [GCP].mkv",
+        "Codec": "vp9",
+        "Profile": "Profile 0",
+        "Width": 2560,
+        "Height": 1440,
+        "Resolution": "2560x1440",
+        "Aspect_Ratio": "16:9",
+        "FPS": 25.0,
+        "Bitrate": "",
+        "Bit_Depth": "",
+        "Pixel_Format": "yuv420p",
+        "HDR": "",
+        "Scan_Type": "Progressive",
+        "Default": "Yes"
+      },
+      {
+        "Video_ID": "30091eb83f66b3e7-V2",
+        "Media_ID": "30091eb83f66b3e7",
+        "File_Name": "Mahiya [1440p] [VP9] [Multi Audio] [17 Subtitle Tracks] [GCP].mkv",
+        "Codec": "mjpeg",
+        "Profile": "Progressive",
+        "Width": 2560,
+        "Height": 2560,
+        "Resolution": "2560x2560",
+        "Aspect_Ratio": "1:1",
+        "FPS": "",
+        "Bitrate": "",
+        "Bit_Depth": "8",
+        "Pixel_Format": "yuvj420p",
+        "HDR": "",
+        "Scan_Type": "Progressive",
+        "Default": "No"
+      }
+    ],
+    "Audio": [
+      {
+        "Audio_ID": "30091eb83f66b3e7-A1",
+        "Media_ID": "30091eb83f66b3e7",
+        "Track_No": 1,
+        "Title": "",
+        "Artist": "",
+        "Codec": "opus",
+        "Sample_Rate": "48000",
+        "Bit_Depth": "",
+        "Channels": 2,
+        "Channel_Layout": "stereo",
+        "Language": "eng",
+        "Hi_Res": "No",
+        "Default": "No"
+      },
+      {
+        "Audio_ID": "30091eb83f66b3e7-A2",
+        "Media_ID": "30091eb83f66b3e7",
+        "Track_No": 2,
+        "Title": "Hi-Res Apple Lossless (ALAC) 24-bit 96.0kHz By GCP",
+        "Artist": "",
+        "Codec": "alac",
+        "Sample_Rate": "96000",
+        "Bit_Depth": "24",
+        "Channels": 2,
+        "Channel_Layout": "stereo",
+        "Language": "",
+        "Hi_Res": "Yes",
+        "Default": "Yes"
+      }
+    ],
+    "Subtitle": [
+      {
+        "Subtitle_ID": "30091eb83f66b3e7-S1",
+        "Media_ID": "30091eb83f66b3e7",
+        "Track_No": 1,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Mahiya Bengali Color",
+        "Default": "Yes",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "30091eb83f66b3e7-S2",
+        "Media_ID": "30091eb83f66b3e7",
+        "Track_No": 2,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Mahiya English Color",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "30091eb83f66b3e7-S3",
+        "Media_ID": "30091eb83f66b3e7",
+        "Track_No": 3,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Mahiya Hindi Color",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "30091eb83f66b3e7-S4",
+        "Media_ID": "30091eb83f66b3e7",
+        "Track_No": 4,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Mahiya Romanized Color",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "30091eb83f66b3e7-S5",
+        "Media_ID": "30091eb83f66b3e7",
+        "Track_No": 5,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Mahiya [BAN + ENG] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "30091eb83f66b3e7-S6",
+        "Media_ID": "30091eb83f66b3e7",
+        "Track_No": 6,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Mahiya [BAN] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "30091eb83f66b3e7-S7",
+        "Media_ID": "30091eb83f66b3e7",
+        "Track_No": 7,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Mahiya [ENG] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "30091eb83f66b3e7-S8",
+        "Media_ID": "30091eb83f66b3e7",
+        "Track_No": 8,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Mahiya [ORG + ROM + BAN + ENG] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "30091eb83f66b3e7-S9",
+        "Media_ID": "30091eb83f66b3e7",
+        "Track_No": 9,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Mahiya [ORG] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "30091eb83f66b3e7-S10",
+        "Media_ID": "30091eb83f66b3e7",
+        "Track_No": 10,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Mahiya [ROM + BAN] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "30091eb83f66b3e7-S11",
+        "Media_ID": "30091eb83f66b3e7",
+        "Track_No": 11,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Mahiya [ROM + ENG] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "30091eb83f66b3e7-S12",
+        "Media_ID": "30091eb83f66b3e7",
+        "Track_No": 12,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Mahiya [ROM + ORG] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "30091eb83f66b3e7-S13",
+        "Media_ID": "30091eb83f66b3e7",
+        "Track_No": 13,
+        "Codec": "subrip",
+        "Language": "",
+        "Title": "Mahiya [ROM] [GCP]",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "30091eb83f66b3e7-S14",
+        "Media_ID": "30091eb83f66b3e7",
+        "Track_No": 14,
+        "Codec": "ass",
+        "Language": "",
+        "Title": "Mahiya Bengali Color",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "30091eb83f66b3e7-S15",
+        "Media_ID": "30091eb83f66b3e7",
+        "Track_No": 15,
+        "Codec": "ass",
+        "Language": "",
+        "Title": "Mahiya English Color",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "30091eb83f66b3e7-S16",
+        "Media_ID": "30091eb83f66b3e7",
+        "Track_No": 16,
+        "Codec": "ass",
+        "Language": "",
+        "Title": "Mahiya Hindi Color",
+        "Default": "No",
+        "Forced": "No"
+      },
+      {
+        "Subtitle_ID": "30091eb83f66b3e7-S17",
+        "Media_ID": "30091eb83f66b3e7",
+        "Track_No": 17,
+        "Codec": "ass",
+        "Language": "",
+        "Title": "Mahiya Romanized Color",
+        "Default": "No",
+        "Forced": "No"
+      }
+    ]
+  },
+  {
     "Media_ID": "e6a1be89a980b7b6",
     "Title": "Udh Jaayega",
     "File_Name": "Udh Jaayega [1080p] [H.264] [Multi Audio] [GCP].mkv",
